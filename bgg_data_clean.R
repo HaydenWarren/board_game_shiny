@@ -53,6 +53,28 @@ games = games %>%
          publisher = boardgamepublisher
          ) 
 
+# considering limiting games to the total percentage of the gaming market
+# # this is how many games are still prevalent.
+# games = games %>% 
+#   arrange(owned) %>% mutate(csum = cumsum(owned),csum_per = csum/26276972) %>% 
+#   filter(csum_per>.01) # 15865
+# 
+# games = games %>% 
+#   # select(id,name,num_rating,owned) %>%
+#   arrange(owned) %>% mutate(csum = cumsum(owned),csum_per = csum/26276972) %>% 
+#   filter(csum_per>.1) # 6806
+
+games = games %>% 
+  # select(id,name,num_rating,owned) %>%
+  arrange(owned) %>% mutate(csum = cumsum(owned),csum_per = csum/26276972) %>% 
+  filter(csum_per>.25) # 2658
+# 
+# games = games %>% 
+#   # select(id,name,num_rating,owned) %>%
+#   arrange(owned) %>% mutate(csum = cumsum(owned),csum_per = csum/26276972) %>% 
+#   filter(csum_per>.5) # 700
+
+
 # replace double quote for single quote because "Prisoner's Dilemma" ruins the split
 games$mechanic <- gsub('"', "'", games$mechanic)
 
@@ -88,16 +110,22 @@ for (i in 2:ncol(game_mech)){
                          na.rm = TRUE)
   colnames(game_mech)[i] = as.character(all_mechs[i-1,1])
   }
+game_mech$mechanics_sum = rowSums(game_mech[,-1])
 
-row_sum = data.frame(thing = rowSums(game_mech[,-1]))
-ggplot(data = row_sum) +geom_density(aes(x=thing))
+games = merge(x = games, y = game_mech, by ='id')
 
-sum_test = data.frame(thing = colSums(game_mech[,-1]))
-sum_test <- cbind(all_mechs = rownames(sum_test), sum_test)
-rownames(sum_test) <- 1:nrow(sum_test)
 
-mechs_test = merge(x = all_mechs_count, y = sum_test, by = "all_mechs", all = TRUE)
-mechs_test = mechs_test %>% mutate(sum_diff = Freq - thing, mech_per = Freq/19230)
+# 
+# 
+# row_sum = data.frame(thing = rowSums(game_mech[,-1]))
+# ggplot(data = row_sum) +geom_density(aes(x=thing))
+# 
+# sum_test = data.frame(thing = colSums(game_mech[,-1]))
+# sum_test <- cbind(all_mechs = rownames(sum_test), sum_test)
+# rownames(sum_test) <- 1:nrow(sum_test)
+# 
+# mechs_test = merge(x = all_mechs_count, y = sum_test, by = "all_mechs", all = TRUE)
+# mechs_test = mechs_test %>% mutate(sum_diff = Freq - thing, mech_per = Freq/19230)
 
 
 ############################################
@@ -126,37 +154,23 @@ for (i in 2:ncol(games_cat)){
                          na.rm = TRUE)
   colnames(games_cat)[i] = as.character(all_cats[i-1,1])
 }
+games_cat$category_sum = rowSums(games_cat[,-1])
+
+games = merge(x = games, y = games_cat, by ='id')
 
 
-row_sum = data.frame(thing = rowSums(games_cat[,-1]))
-ggplot(data = row_sum) +geom_density(aes(x=thing))
+# 
+# row_sum = data.frame(thing = rowSums(games_cat[,-1]))
+# ggplot(data = row_sum) +geom_density(aes(x=thing))
+# 
+# sum_test = data.frame(thing = colSums(games_cat[,-1]))
+# sum_test <- cbind(all_cats = rownames(sum_test), sum_test)
+# rownames(sum_test) <- 1:nrow(sum_test)
+# 
+# cats_test = merge(x = all_cats, y = sum_test, by = "all_cats", all = TRUE)
+# cats_test = cats_test %>% mutate(sum_diff = Freq - thing, mech_per = Freq/19230)
+# 
 
-sum_test = data.frame(thing = colSums(games_cat[,-1]))
-sum_test <- cbind(all_cats = rownames(sum_test), sum_test)
-rownames(sum_test) <- 1:nrow(sum_test)
-
-cats_test = merge(x = all_cats, y = sum_test, by = "all_cats", all = TRUE)
-cats_test = cats_test %>% mutate(sum_diff = Freq - thing, mech_per = Freq/19230)
-
-
-
-# considering limiting games to the total percentage of the gaming market
-# this is how many games are still prevalent.
-games_cum = games %>% 
-  arrange(owned) %>% mutate(csum = cumsum(owned),csum_per = csum/26276972) %>% 
-  filter(csum_per>.01) # 15865
-
-games_cum = games %>% select(id,name,num_rating,owned) %>%
-  arrange(owned) %>% mutate(csum = cumsum(owned),csum_per = csum/26276972) %>% 
-  filter(csum_per>.1) # 6806
-
-games_cum = games %>% select(id,name,num_rating,owned) %>%
-  arrange(owned) %>% mutate(csum = cumsum(owned),csum_per = csum/26276972) %>% 
-  filter(csum_per>.25) # 2658
-
-games_cum = games %>% select(id,name,num_rating,owned) %>%
-  arrange(owned) %>% mutate(csum = cumsum(owned),csum_per = csum/26276972) %>% 
-  filter(csum_per>.5) # 700
 
 
 
@@ -293,32 +307,60 @@ games_graph + geom_point(aes(wishing))
 games_graph + geom_point(aes(num_comment))
 games_graph + geom_point(aes(num_complex))
 games_graph + geom_point(aes(complex))
+games_graph + geom_density(aes(complex))
+ggplot(games) + geom_density(aes(x=complex))
 games_graph + geom_point(aes(min_players))
+ggplot(games) + geom_density(aes(x=min_players))
 
 games %>% filter(num_rating>1000) %>% 
   ggplot() + geom_col(aes(x = min_players,
                               y = num_rating))
 
 games_graph + geom_point(aes(max_players))
+ggplot(games) + geom_density(aes(x=max_players))
+games %>% filter(max_players<20)%>% ggplot() + geom_density(aes(x=max_players))
+
 
 games_graph + geom_point(aes(play_time))
+games %>% filter(play_time<500)%>% ggplot() + geom_density(aes(x=play_time))
+
 games_graph + geom_point(aes(min_play_time))
 games_graph + geom_point(aes(max_play_time))
 games_graph + geom_point(aes(min_age))
+games %>% 
+  # filter(play_time<500)%>% 
+  ggplot() + geom_density(aes(x=min_age))
+
 games %>% filter(num_rating>1000) %>% 
   ggplot() + geom_col(aes(x = min_age,
                           y = num_rating))
 
 games_graph + geom_point(aes(max_players))
-
+games %>% 
+  filter(max_players<25)%>%
+  ggplot() + geom_density(aes(x=max_players))
 
 games %>%
   filter(play_time<500) %>% ggplot(aes(y=num_rating)) +
   geom_point(aes(play_time))
 
+games %>% 
+  filter(play_time<500)%>%
+  ggplot() + geom_density(aes(x=play_time))
+games %>% 
+  filter(play_time<500)%>%
+  ggplot() + stat_density_2d(aes(x=play_time,y=owned,fill=..density..))
+
+games %>% 
+  filter(play_time<500)%>%ggplot(aes(x=play_time,y=owned)) +
+  stat_density_2d(geom = "polygon",
+                  aes(alpha = ..level..),
+                  bins = 7) 
+
 games %>%
   filter(min_play_time<500) %>% ggplot(aes(y=num_rating)) +
   geom_point(aes(min_play_time))
+
 
 games %>%
   filter(max_play_time<500) %>% ggplot(aes(y=num_rating)) +
@@ -328,13 +370,101 @@ games_graph + geom_point(aes(min_age))
 
 ggplot(games,aes(x=num_rating)) + geom_boxplot()
 
+games_graph + geom_point(aes(category_sum))
 
+games %>% 
+  filter(play_time<500)%>%ggplot(aes(x=category_sum,y=owned)) +
+  stat_density_2d(geom = "polygon",
+                  aes(alpha = ..level..),
+                  bins = 7) 
+games_graph + geom_point(aes(mechanics_sum))
+
+games$mechanics_fsum <- factor(games$mechanics_sum)
+games %>%
+  group_by(mechanics_sum) %>%
+  summarise(cnt = n(),mean(owned),median(owned))
+games %>% 
+  filter(csum_per>.5) %>%
+  ggplot(aes(x=owned)) +
+  geom_boxplot(aes(fill=mechanics_fsum))
+games %>% 
+  filter(csum_per>.75) %>%
+  ggplot(aes(x=owned)) +
+  geom_boxplot(aes(fill=mechanics_fsum))
+games %>% 
+  # filter(csum_per>.75) %>%
+  ggplot(aes(x=owned)) +
+  geom_boxplot(aes(fill=mechanics_fsum))
+games %>% 
+  filter(play_time<500)%>%ggplot(aes(x=mechanics_sum,y=owned)) +
+  stat_density_2d(geom = "polygon",
+                  aes(alpha = ..level..),
+                  bins = 7) 
+
+
+games$category_fsum <- factor(games$category_sum)
+games %>%
+  group_by(category_sum) %>%
+  summarise(cnt = n(),mean(owned),median(owned))
+games %>% 
+  filter(csum_per>.5) %>%
+  ggplot(aes(x=owned)) +
+  geom_boxplot(aes(fill=category_fsum))
+games %>% 
+  filter(csum_per>.75) %>%
+  ggplot(aes(x=owned)) +
+  geom_boxplot(aes(fill=category_fsum))
+games %>% 
+  # filter(csum_per>.75) %>%
+  ggplot(aes(x=owned)) +
+  geom_boxplot(aes(fill=category_fsum))
+games %>% 
+  filter(play_time<500)%>%ggplot(aes(x=category_sum,y=owned)) +
+  stat_density_2d(geom = "polygon",
+                  aes(alpha = ..level..),
+                  bins = 7) 
+
+games$f_hand_management <- factor(games$'Hand Management')
+games %>% 
+  filter(csum_per>.75) %>%
+  ggplot(aes(x=owned)) +
+  geom_density(aes(fill=f_hand_management))
+
+games$fEconomic <- factor(games$'Economic')
+games %>% 
+  filter(csum_per>.75) %>%
+  ggplot(aes(x=owned)) +
+  geom_boxplot(aes(fill=fEconomic))
+
+games$fcard_game <- factor(games$'Card Game')
+games %>% 
+  filter(csum_per>.7) %>%
+  ggplot(aes(x=owned)) +
+  geom_boxplot(aes(fill=fcard_game))
 #########
+games %>% filter(id == diplo_id) %>% ggplot() +
+  geom_point(aes(x=owned,y=num_rating),color='red',
+             size=10) +
+  geom_point(data = games,aes(x=owned,y=num_rating))
 
 sum(is.na(games$num_rating))
 
+top = games %>% select(name,owned) %>% arrange(desc(owned))
 
+top$Diff <- top$owned - dplyr::lag(top$owned, n = 1)
 
+ggplot(top) +geom_point(aes(x=owned,y=Diff))+
+  geom_point(aes(x=29591,y=-908),color='red')
+# possible cut off point.
 
+### also would remove the top two from some of the things as different.
+# 102
+# Roll for the Galaxy
+# 30499
+# -52
+# 103
+# Zombie Dice
+# 29591
+# -908
 
 
