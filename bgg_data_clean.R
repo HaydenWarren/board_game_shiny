@@ -2,7 +2,8 @@
 library(tidyverse)
 
 ## columns to drop:
-# type, thumbnail, alternate, median, boardgamecompilation
+# type, thumbnail, alternate, median, boardgamecompilation, min_playtime,
+# max_playtime
 
 ## columns to consider dropping:
 # image, description, syggested_language_dependenc..., family
@@ -37,10 +38,8 @@ games_dirty = games_dirty %>%
          g_rank = Board.Game.Rank, std_rank = stddev, owned, trading, wanting, 
          wishing, num_comment = numcomments, num_complex = numweights,
          complex = averageweight,
-         suggested_num_players, min_players = minplayers, 
+         min_players = minplayers, 
          max_players = maxplayers, play_time = playingtime, 
-         min_play_time = minplaytime, max_play_time = maxplaytime, 
-         suggested_playerage,
          min_age = minage, family = boardgamefamily,
          expansion = boardgameexpansion, 
          implementation = boardgameimplementation,
@@ -73,7 +72,7 @@ colnames(game_mech)[1] = "id"
 for (i in 2:ncol(game_mech)){
   game_mech[i] = rowSums(mech_dirty[ ,startsWith(names(mech_dirty),"mechanic")]==as.character(all_mechs[i-1,1]),
                          na.rm = TRUE)
-  colnames(game_mech)[i] = as.character(all_mechs[i-1,1])
+  colnames(game_mech)[i] = paste0('mech_',as.character(all_mechs[i-1,1]))
 }
 # sum of how many mechanics a given game has.
 game_mech$mechanics_sum = rowSums(game_mech[,-1])
@@ -103,7 +102,7 @@ colnames(games_cat)[1] = "id"
 for (i in 2:ncol(games_cat)){
   games_cat[i] = rowSums(cat_dirty[ ,startsWith(names(cat_dirty),"category")]==as.character(all_cats[i-1,1]),
                          na.rm = TRUE)
-  colnames(games_cat)[i] = as.character(all_cats[i-1,1])
+  colnames(games_cat)[i] = paste0('cat_',as.character(all_cats[i-1,1]))
 }
 # sum of how many mechanics a given game has.
 games_cat$category_sum = rowSums(games_cat[,-1])
@@ -114,6 +113,7 @@ games_dirty = merge(x = games_dirty, y = games_cat, by ='id')
 games_dirty = games_dirty %>%
   filter(category_sum!=0 | mechanics_sum!=0) %>% # remove games with no category or mechanic values.
   filter(year_published<2021) %>% # this data was collected in august 2020. doesn't make sense
+  filter(year_published>=1995) %>% # 1995 is the first year that there are at least 200 games in the data set and Catan was made in that year. It is the best of bad options to cut off at that time.
   mutate(expansion = case_when(expansion=='' ~ 0, # making expansion a binary
                                expansion!='' ~ 1),
          integration = case_when(integration=='' ~ 0, # same for integration
@@ -122,9 +122,9 @@ games_dirty = games_dirty %>%
                                  compilation!='' ~ 1)
   )%>%
   filter(!str_detect(publisher, 'Public Domain')) # removing public domain games
-
-
-
+# removing outliers that are insane
+games_dirty$max_players <- ifelse(games_dirty$max_players>21 , 21, games_dirty$max_players)
+games_dirty$max_players <- ifelse(games_dirty$max_players>360 , 361, games_dirty$max_players)
 
 # 
 # # https://www.r-bloggers.com/2019/07/clean-consistent-column-names/
@@ -159,3 +159,4 @@ games_dirty = games_dirty %>%
 
 
 write.csv(games_dirty, file = 'games_cleaned.csv', row.names = FALSE)
+
