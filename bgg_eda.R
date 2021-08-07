@@ -1,12 +1,91 @@
 
 library(tidyverse)
-
+library(data.table)
 # look at the top publishers to look at different publishers.
 
 
 games = read.csv('games_cleaned.csv')
 
+# limit to after 1995 makes sense
+numbers_of_bins = 5
 
+games = games%>%
+  mutate(owned_bins = cut(owned, 
+                          breaks = unique(quantile(owned,probs=seq.int(0,1, by=1/numbers_of_bins))), 
+                                     include.lowest=TRUE))
+
+# interesting to look at given mechs/cats but it will be hard to 
+# look at that. will need a better way to look at top cats.
+# rankings
+test = games %>% 
+  group_by(year_published) %>%
+  # summarise(cnt=n())
+  summarise_if(is.numeric, list(mean,sum), na.rm = TRUE)
+
+# complex split up is good. lets you see that moer complex games are more
+# popular. and they have less players.
+games = games%>%
+  mutate(complex_bins = cut(complex, 
+                          breaks = unique(quantile(complex,probs=seq.int(0,1, by=1/numbers_of_bins))), 
+                          include.lowest=TRUE))
+test = games %>% 
+  group_by(complex_bins) %>%
+  # summarise(cnt=n())
+  summarise_if(is.numeric, list(mean,sum), na.rm = TRUE)
+
+# could be interesting but i'm not super sold on it
+games = games%>%
+  mutate(max_players_bins = cut(max_players, breaks = c(0, 3.5, 4.5, 5.5, 6.5,22),
+                                labels = c("1-3", "4", "5", "6",'7+'),
+                                include.lowest = TRUE))
+test = games %>% 
+  group_by(max_players_bins) %>%
+  # summarise(cnt=n())
+  summarise_if(is.numeric, list(mean,sum), na.rm = TRUE)
+
+# decently interesting that 60+ game time correlates with more popular/complex game.
+# i'd be interested to see which mechs are also the most successful for whatever.
+games = games%>%
+  mutate(play_time_bins = cut(play_time, 
+                            breaks = unique(quantile(play_time,probs=seq.int(0,1, by=1/numbers_of_bins))), 
+                            include.lowest=TRUE))
+test = games %>% 
+  group_by(play_time_bins) %>%
+  # summarise(cnt=n())
+  summarise_if(is.numeric, list(mean,sum), na.rm = TRUE)
+#card games are just kinda everywhere. But fantasy games are huge!
+test = games %>% 
+  group_by(Card.Game) %>%
+  # summarise(cnt=n())
+  summarise_if(is.numeric, list(mean,sum), na.rm = TRUE)
+
+test = games %>% 
+  group_by(Fantasy) %>%
+  # summarise(cnt=n())
+  summarise_if(is.numeric, list(mean,sum), na.rm = TRUE)
+
+test = games %>% 
+  group_by(Wargame) %>%
+  # summarise(cnt=n())
+  summarise_if(is.numeric, list(mean,sum), na.rm = TRUE)
+
+# test = games %>% 
+#   select(starts_with("mech_")) %>%
+#   gather(key, value, starts_with("mech_")) %>% 
+#   group_by(key) %>%
+#   summarise(sum(value))
+# 
+#   filter(owned_bins=='(1.26e+03,1.45e+05]') %>%
+#   gather(starts_with("mech_"),sum)
+
+# this will get the column names for the columns that have the highest sum in each column
+# you first need to have the list of columns that you are considering
+# i started with the first/ last columns that are mechs.
+firstcol = which(colnames(games)=="mech_Acting") # just cause it is.
+lastcol = which(colnames(games)=="mech_Zone.of.Control") # just cause it is.
+colnames(games[c(firstcol:lastcol)])[rev(sort.list(colSums(games[c(firstcol:lastcol)])))[1:8] ]
+
+games[, colSums(.SD), .SDcols=patterns("mech_")]
 # considering limiting games to the total percentage of the gaming market
 # # this is how many games are still prevalent.
 # games = games %>% 
