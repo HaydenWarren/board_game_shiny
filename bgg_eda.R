@@ -6,7 +6,6 @@ library(tidyverse)
 
 games = read.csv('games_cleaned.csv')
 
-# limit to after 1995 makes sense
 numbers_of_bins = 5
 
 games = games%>%
@@ -14,45 +13,6 @@ games = games%>%
                           breaks = unique(quantile(owned,probs=seq.int(0,1, by=1/numbers_of_bins))), 
                                      include.lowest=TRUE))
 
-games_owned_bins = games %>% 
-  group_by(owned_bins) %>%
-  summarise_if(is.numeric, list(mean), na.rm = TRUE)
-
-adjust_val = 1.4
-games %>% ggplot(aes(x=owned_bins,y=g_rank)) + 
-  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
-  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
-  coord_flip()
-
-games %>% ggplot(aes(x=owned_bins,y=avg_rating)) + 
-  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
-  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
-  coord_flip()
-
-games %>% filter(complex!=0) %>% ggplot(aes(x=owned_bins,y=complex)) + 
-  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
-  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
-  coord_flip()
-
-games %>% ggplot(aes(x=owned_bins,y=play_time)) + 
-  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
-  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
-  coord_flip()
-#not useful
-games %>% ggplot(aes(x=owned_bins,y=min_players)) + 
-  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
-  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
-  coord_flip()
-#not useful
-games %>% ggplot(aes(x=owned_bins,y=max_players)) + 
-  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
-  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
-  coord_flip()
-
-games %>% filter(min_age!=0) %>% ggplot(aes(x=owned_bins,y=min_age)) + 
-  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
-  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
-  coord_flip()
 
 firstcol = which(colnames(games_owned_bins)=="mech_Acting") # just cause it is.
 lastcol = which(colnames(games_owned_bins)=="mech_Zone.of.Control") # just cause it is.
