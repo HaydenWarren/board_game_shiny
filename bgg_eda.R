@@ -96,7 +96,7 @@ firstcol = which(colnames(games_owned_bins)=="cat_Abstract.Strategy") # just cau
 lastcol = which(colnames(games_owned_bins)=="cat_Zombies") # just cause it is.
 owned_mech_top_20 = colnames(games_owned_bins[c(firstcol:lastcol)])[rev(sort.list(colSums(games_owned_bins[c(firstcol:lastcol)])))[1:20] ]
 games_owned_mech_20 = games_owned_bins %>% 
-  select(owned_bins,all_of(owned_mech_top_20),-mechanics_sum) %>%
+  select(owned_bins,all_of(owned_mech_top_20),) %>%
   gather(top_mechs, per_, -c(owned_bins))
 
 
