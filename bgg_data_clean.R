@@ -75,7 +75,7 @@ for (i in 2:ncol(game_mech)){
   colnames(game_mech)[i] = paste0('mech_',as.character(all_mechs[i-1,1]))
 }
 # sum of how many mechanics a given game has.
-game_mech$mechanics_sum = rowSums(game_mech[,-1])
+game_mech$mech_Global.Mechanics.Average = rowSums(game_mech[,-1])
 # merges mechanics back into main games_dirty
 games_dirty = merge(x = games_dirty, y = game_mech, by ='id')
 ### Same thing now for category
@@ -105,13 +105,13 @@ for (i in 2:ncol(games_cat)){
   colnames(games_cat)[i] = paste0('cat_',as.character(all_cats[i-1,1]))
 }
 # sum of how many mechanics a given game has.
-games_cat$category_sum = rowSums(games_cat[,-1])
+games_cat$cat_Global.Categorys.Average = rowSums(games_cat[,-1])
 # merges mechanics back into main games_dirty
 games_dirty = merge(x = games_dirty, y = games_cat, by ='id')
 
 ### cleaning the data
 games_dirty = games_dirty %>%
-  filter(category_sum!=0 | mechanics_sum!=0) %>% # remove games with no category or mechanic values.
+  filter(cat_Global.Categorys.Average!=0 | mech_Global.Mechanics.Average!=0) %>% # remove games with no category or mechanic values.
   filter(year_published<2021) %>% # this data was collected in august 2020. doesn't make sense
   filter(year_published>=1995) %>% # 1995 is the first year that there are at least 200 games in the data set and Catan was made in that year. It is the best of bad options to cut off at that time.
   mutate(expansion = case_when(expansion=='' ~ 0, # making expansion a binary
