@@ -124,7 +124,7 @@ games_dirty = games_dirty %>%
   filter(!str_detect(publisher, 'Public Domain')) # removing public domain games
 # removing outliers that are insane
 games_dirty$max_players <- ifelse(games_dirty$max_players>21 , 21, games_dirty$max_players)
-games_dirty$max_players <- ifelse(games_dirty$max_players>360 , 361, games_dirty$max_players)
+games_dirty$play_time <- ifelse(games_dirty$play_time>360 , 361, games_dirty$play_time)
 
 # 
 # # https://www.r-bloggers.com/2019/07/clean-consistent-column-names/
