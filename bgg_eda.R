@@ -1,6 +1,6 @@
 
 library(tidyverse)
-library(data.table)
+# library(data.table)
 # look at the top publishers to look at different publishers.
 
 
@@ -13,6 +13,266 @@ games = games%>%
   mutate(owned_bins = cut(owned, 
                           breaks = unique(quantile(owned,probs=seq.int(0,1, by=1/numbers_of_bins))), 
                                      include.lowest=TRUE))
+
+games_owned_bins = games %>% 
+  group_by(owned_bins) %>%
+  summarise_if(is.numeric, list(mean), na.rm = TRUE)
+
+adjust_val = 1.4
+games %>% ggplot(aes(x=owned_bins,y=g_rank)) + 
+  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
+  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
+  coord_flip()
+
+games %>% ggplot(aes(x=owned_bins,y=avg_rating)) + 
+  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
+  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
+  coord_flip()
+
+games %>% filter(complex!=0) %>% ggplot(aes(x=owned_bins,y=complex)) + 
+  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
+  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
+  coord_flip()
+
+games %>% ggplot(aes(x=owned_bins,y=play_time)) + 
+  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
+  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
+  coord_flip()
+#not useful
+games %>% ggplot(aes(x=owned_bins,y=min_players)) + 
+  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
+  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
+  coord_flip()
+#not useful
+games %>% ggplot(aes(x=owned_bins,y=max_players)) + 
+  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
+  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
+  coord_flip()
+
+games %>% filter(min_age!=0) %>% ggplot(aes(x=owned_bins,y=min_age)) + 
+  geom_violin(aes(fill=owned_bins),adjust = adjust_val) +
+  geom_boxplot(width=0.08, fill="white",outlier.shape=NA)+ 
+  coord_flip()
+
+firstcol = which(colnames(games_owned_bins)=="mech_Acting") # just cause it is.
+lastcol = which(colnames(games_owned_bins)=="mech_Zone.of.Control") # just cause it is.
+owned_mech_top_8 = colnames(games_owned_bins[c(firstcol:lastcol)])[rev(sort.list(colSums(games_owned_bins[c(firstcol:lastcol)])))[1:8] ]
+games_owned_mech_8 = games_owned_bins %>% 
+  select(owned_bins,all_of(owned_mech_top_8),-mechanics_sum) %>%
+  gather(top_mechs, per_, -c(owned_bins))
+
+games_owned_mech_8 %>%
+  mutate(owned_bins= as.numeric(owned_bins)) %>%
+  ggplot(aes(x=owned_bins,y=per_)) + geom_line(aes(color = top_mechs))
+
+firstcol = which(colnames(games_owned_bins)=="mech_Acting") # just cause it is.
+lastcol = which(colnames(games_owned_bins)=="mech_Zone.of.Control") # just cause it is.
+owned_mech_top_20 = colnames(games_owned_bins[c(firstcol:lastcol)])[rev(sort.list(colSums(games_owned_bins[c(firstcol:lastcol)])))[1:20] ]
+games_owned_mech_20 = games_owned_bins %>% 
+  select(owned_bins,all_of(owned_mech_top_20),-mechanics_sum) %>%
+  gather(top_mechs, per_, -c(owned_bins)) %>%
+  mutate(top_mechs = gsub('\\.',' ',gsub(".*_", "", top_mechs)))
+  
+
+games_owned_mech_20 %>%
+  mutate(owned_bins= as.numeric(owned_bins)) %>%
+  ggplot(aes(x=owned_bins,y=per_)) + geom_line(aes(color = top_mechs))
+
+games_owned_bins = games %>% 
+  group_by(owned_bins) %>%
+  summarise_if(is.numeric, list(sum), na.rm = TRUE)
+firstcol = which(colnames(games_owned_bins)=="cat_Abstract.Strategy") # just cause it is.
+lastcol = which(colnames(games_owned_bins)=="cat_Zombies") # just cause it is.
+owned_cat_top_8 = colnames(games_owned_bins[c(firstcol:lastcol)])[rev(sort.list(colSums(games_owned_bins[c(firstcol:lastcol)])))[1:8] ]
+games_owned_mech_8 = games_owned_bins %>% 
+  select(owned_bins,all_of(owned_cat_top_8),-mechanics_sum) %>%
+  gather(top_mechs, per_, -c(owned_bins))
+
+games_owned_mech_8 %>%
+  mutate(owned_bins= as.numeric(owned_bins)) %>%
+  ggplot(aes(x=owned_bins,y=per_)) + geom_line(aes(color = top_mechs))
+
+firstcol = which(colnames(games_owned_bins)=="cat_Abstract.Strategy") # just cause it is.
+lastcol = which(colnames(games_owned_bins)=="cat_Zombies") # just cause it is.
+owned_mech_top_20 = colnames(games_owned_bins[c(firstcol:lastcol)])[rev(sort.list(colSums(games_owned_bins[c(firstcol:lastcol)])))[1:20] ]
+games_owned_mech_20 = games_owned_bins %>% 
+  select(owned_bins,all_of(owned_mech_top_20),-mechanics_sum) %>%
+  gather(top_mechs, per_, -c(owned_bins))
+
+
+#########
+games_owned_mech_20 %>%
+  mutate(top_mechs = gsub('\\.',' ',gsub(".*_", "", top_mechs))) %>%
+  mutate(owned_bins= as.numeric(owned_bins)) %>%
+  ggplot(aes(x=owned_bins,y=per_)) + geom_line(aes(color = top_mechs))
+
+
+
+
+######3
+top_20_total =games_owned_mech_20 %>% 
+  group_by(top_mechs) %>% 
+  summarise(total = sum(per_)) 
+games_owned_mech_20 = merge(games_owned_mech_20,top_20_total, by = 'top_mechs',
+                            all.x = TRUE)
+
+plot_order = unlist(games_owned_mech_20 %>% 
+  mutate(owned_bins= as.numeric(owned_bins)) %>% filter(owned_bins==5) %>%
+  mutate(per_ = per_/total) %>% arrange(per_) %>% select(top_mechs))
+
+games_owned_mech_20$top_mechs <- factor(games_owned_mech_20$top_mechs, 
+                                        levels = plot_order)
+
+nice_bar_graph = games_owned_mech_20 %>%
+  mutate(owned_bins= as.factor(as.numeric(owned_bins))) %>%
+  ggplot(aes(fill=owned_bins, x=per_, y=top_mechs)) + 
+  geom_bar(position="fill", stat="identity")+
+  scale_shape_manual(values=c(1, 2, 3,4,5)) +
+  scale_fill_manual(values = c('5'="#F8B195",
+                               '4'="#F67280",
+                               '3'="#C06C84",
+                               '2'="#6C5B7B",
+                               '1'="#355C7D"))
+
+nice_bar_graph + theme(axis.title.y=element_blank(),
+                       # axis.text.y=element_blank(),
+                       axis.ticks.y=element_blank(),
+                       axis.title.x=element_blank(),
+                       axis.ticks.x=element_blank(),
+                       plot.background = element_rect(fill = '#F0F0F0'),
+                       panel.background = element_rect(fill = '#F0F0F0'),
+                       panel.grid.major = element_line(colour = "#CDCDCD"),
+                       panel.grid.minor = element_line(colour = "#CDCDCD"),
+                       panel.grid.major.x = element_blank(),
+                       panel.grid.minor.x = element_blank(),
+                       panel.grid.major.y = element_blank(),
+                       panel.grid.minor.y = element_blank(),
+                       legend.position="top",
+                       legend.background = element_rect(fill="#F0F0F0", 
+                                                        size=0.5, linetype="solid"),
+                       axis.text.y = element_text(margin = margin(r = -30))
+)
+
+
+games_owned_mech_20 %>%
+  mutate(owned_bins = case_when(owned_bins=='[2,126]' ~ '2-126',
+                                owned_bins=='(126,234]' ~ '127-234',
+                                owned_bins=='(234,472]' ~ '235-472',
+                                owned_bins=='(472,1.26e+03]' ~ '472-1262',
+                                owned_bins=='(1.26e+03,1.45e+05]' ~ '1263-144727'
+  )) %>%
+  mutate(owned_bins=factor(owned_bins, levels=c('2-126', '127-234', '235-472','472-1262','1263-144727'))) %>%
+  ggplot(aes(fill=owned_bins, x=per_, y=top_mechs)) + 
+  geom_bar(position="fill", stat="identity") +
+  scale_shape_manual(values=c('2-126', '127-234', '235-472','472-1262','1263-144727')) +
+  scale_fill_manual(values = c('2-126'="#F8B195", #F8B195   F67280   C06C84   6C5B7B   355C7D 
+                               '127-234'="#F67280",
+                               '235-472'="#C06C84",
+                               '472-1262'="#6C5B7B",
+                               '1263-144727'="#355C7D"),
+                    guide = guide_legend(reverse = TRUE))+ 
+  theme(axis.title.y=element_blank(),
+        # axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        plot.background = element_rect(fill = '#F0F0F0'),
+        panel.background = element_rect(fill = '#F0F0F0'),
+        panel.grid.major = element_line(colour = "#CDCDCD"),
+        panel.grid.minor = element_line(colour = "#CDCDCD"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="top",
+        legend.background = element_rect(fill="#F0F0F0", 
+                                         size=0.5, linetype="solid"),
+        axis.text.y = element_text(margin = margin(r = -30))
+  )
+
+games_owned_mech_20 %>%
+  mutate(owned_bins = case_when(owned_bins=='[2,126]' ~ '2-126',
+                                owned_bins=='(126,234]' ~ '127-234',
+                                owned_bins=='(234,472]' ~ '235-472',
+                                owned_bins=='(472,1.26e+03]' ~ '472-1262',
+                                owned_bins=='(1.26e+03,1.45e+05]' ~ '1263-144727'
+  )) %>%
+  mutate(owned_bins=factor(owned_bins, levels=c('2-126', '127-234', '235-472','472-1262','1263-144727'))) %>%
+  ggplot(aes(fill=owned_bins, x=per_, y=top_mechs)) + 
+  geom_bar(position="fill", stat="identity") +
+  scale_shape_manual(values=c('2-126', '127-234', '235-472','472-1262','1263-144727')) +
+  scale_fill_manual(values = c('2-126'="#83AF9B", # FE4365   FC9D9A   F9CDAD   C8C8A9   83AF9B 
+                               '127-234'="#C8C8A9",
+                               '235-472'="#F9CDAD",
+                               '472-1262'="#FC9D9A",
+                               '1263-144727'="#FE4365"),
+                    guide = guide_legend(reverse = TRUE))+ 
+  theme(axis.title.y=element_blank(),
+        # axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        plot.background = element_rect(fill = '#F0F0F0'),
+        panel.background = element_rect(fill = '#F0F0F0'),
+        panel.grid.major = element_line(colour = "#CDCDCD"),
+        panel.grid.minor = element_line(colour = "#CDCDCD"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="top",
+        legend.background = element_rect(fill="#F0F0F0", 
+                                         size=0.5, linetype="solid"),
+        axis.text.y = element_text(margin = margin(r = -30))
+  )
+
+
+
+# ########## colors that julie prefers
+# 
+# games_owned_mech_20 %>%
+#   mutate(owned_bins = case_when(owned_bins=='[2,126]' ~ '2-126',
+#                                 owned_bins=='(126,234]' ~ '127-234',
+#                                 owned_bins=='(234,472]' ~ '235-472',
+#                                 owned_bins=='(472,1.26e+03]' ~ '472-1262',
+#                                 owned_bins=='(1.26e+03,1.45e+05]' ~ '1263-144727'
+#   )) %>%
+#   mutate(owned_bins=factor(owned_bins, levels=c('2-126', '127-234', '235-472','472-1262','1263-144727'))) %>%
+#   ggplot(aes(fill=owned_bins, x=per_, y=top_mechs)) + 
+#   geom_bar(position="fill", stat="identity") +
+#   scale_shape_manual(values=c('2-126', '127-234', '235-472','472-1262','1263-144727')) +
+#   scale_fill_manual(values = c('2-126'="#f9caa7",
+#                                '127-234'="#fad9c1",
+#                                '235-472'="#fec8c1",
+#                                '472-1262'="#feb2a8",
+#                                '1263-144727'="#fe9c8f"))+ 
+#   theme(axis.title.y=element_blank(),
+#         # axis.text.y=element_blank(),
+#         axis.ticks.y=element_blank(),
+#         axis.title.x=element_blank(),
+#         axis.ticks.x=element_blank(),
+#         plot.background = element_rect(fill = '#F0F0F0'),
+#         panel.background = element_rect(fill = '#F0F0F0'),
+#         panel.grid.major = element_line(colour = "#CDCDCD"),
+#         panel.grid.minor = element_line(colour = "#CDCDCD"),
+#         panel.grid.major.x = element_blank(),
+#         panel.grid.minor.x = element_blank(),
+#         panel.grid.major.y = element_blank(),
+#         panel.grid.minor.y = element_blank(),
+#         legend.position="top",
+#         legend.background = element_rect(fill="#F0F0F0", 
+#                                          size=0.5, linetype="solid"),
+#         axis.text.y = element_text(margin = margin(r = -30))
+#   )
+# #fe9c8f • #feb2a8 • #fec8c1 • #fad9c1 • #f9caa7
+
+
+test1 = games_owned_mech_20 %>% 
+  group_by(top_mechs) %>%
+  summarise(total = sum(per_)) %>%
+  select(owned_bins,total) %>%
+  filter(owned_bins=='(1.26e+03,1.45e+05]') %>%
+  transmute(sort_order = per_/total)
 
 # interesting to look at given mechs/cats but it will be hard to 
 # look at that. will need a better way to look at top cats.
@@ -83,7 +343,7 @@ test = games %>%
 # i started with the first/ last columns that are mechs.
 firstcol = which(colnames(games)=="mech_Acting") # just cause it is.
 lastcol = which(colnames(games)=="mech_Zone.of.Control") # just cause it is.
-colnames(games[c(firstcol:lastcol)])[rev(sort.list(colSums(games[c(firstcol:lastcol)])))[1:8] ]
+test = colnames(games[c(firstcol:lastcol)])[rev(sort.list(colSums(games[c(firstcol:lastcol)])))[1:8] ]
 
 games[, colSums(.SD), .SDcols=patterns("mech_")]
 # considering limiting games to the total percentage of the gaming market
