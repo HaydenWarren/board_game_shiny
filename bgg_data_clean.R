@@ -34,23 +34,17 @@ games_dirty = games_dirty %>%
          year_published = yearpublished, 
          category = boardgamecategory,
          mechanic = boardgamemechanic,
-         avg_rating = average, bayes_rating = bayesaverage,
-         g_rank = Board.Game.Rank, std_rank = stddev, owned, trading, wanting, 
-         wishing, num_comment = numcomments, num_complex = numweights,
+         avg_rating = average, owned, 
          complex = averageweight,
          min_players = minplayers, 
          max_players = maxplayers, play_time = playingtime, 
-         min_age = minage, family = boardgamefamily,
+         min_age = minage, 
          expansion = boardgameexpansion, 
-         implementation = boardgameimplementation,
-         integration = boardgameintegration,
-         compilation = boardgamecompilation,
-         designer = boardgamedesigner, artist = boardgameartist,
+         image,
          publisher = boardgamepublisher
          ) 
 ### dummifying the mechanic column into a binary 1/0 if a game has each mechanic.
-# replace double quote for single quote because "Prisoner's Dilemma" ruins the split
-games_dirty$mechanic <- gsub('"', "'", games_dirty$mechanic)
+# replace double quote for single quote because "Prisoner's Dile
 # makes df of all the games with their mechanics
 mech_dirty = games_dirty %>% 
   select(id, mechanic) %>%
@@ -114,49 +108,10 @@ games_dirty = games_dirty %>%
   filter(cat_Global.Categorys.Average!=0 | mech_Global.Mechanics.Average!=0) %>% # remove games with no category or mechanic values.
   filter(year_published<2021) %>% # this data was collected in august 2020. doesn't make sense
   filter(year_published>=1995) %>% # 1995 is the first year that there are at least 200 games in the data set and Catan was made in that year. It is the best of bad options to cut off at that time.
-  mutate(expansion = case_when(expansion=='' ~ 0, # making expansion a binary
-                               expansion!='' ~ 1),
-         integration = case_when(integration=='' ~ 0, # same for integration
-                                 integration!='' ~ 1),
-         compilation = case_when(compilation=='' ~ 0, # same for compilation
-                                 compilation!='' ~ 1)
-  )%>%
   filter(!str_detect(publisher, 'Public Domain')) # removing public domain games
 # removing outliers that are insane
 games_dirty$max_players <- ifelse(games_dirty$max_players>21 , 21, games_dirty$max_players)
 games_dirty$play_time <- ifelse(games_dirty$play_time>360 , 361, games_dirty$play_time)
-
-# 
-# # https://www.r-bloggers.com/2019/07/clean-consistent-column-names/
-# clean_names <- function(.data, unique = FALSE) {
-#   n <- if (is.data.frame(.data)) colnames(.data) else .data
-#   n <- gsub("%+", "_pct_", n)
-#   n <- gsub("\\$+", "_dollars_", n)
-#   n <- gsub("\\++", "_plus_", n)
-#   n <- gsub("-+", "_minus_", n)
-#   n <- gsub("\\*+", "_star_", n)
-#   n <- gsub("#+", "_cnt_", n)
-#   n <- gsub("&+", "_and_", n)
-#   n <- gsub("@+", "_at_", n)
-#   n <- gsub("[^a-zA-Z0-9_]+", "_", n)
-#   n <- gsub("([A-Z][a-z])", "_\\1", n)
-#   n <- tolower(trimws(n))
-#   
-#   n <- gsub("(^_+|_+$)", "", n)
-#   
-#   n <- gsub("_+", "_", n)
-#   
-#   if (unique) n <- make.unique(n, sep = "_")
-#   
-#   if (is.data.frame(.data)) {
-#     colnames(.data) <- n
-#     .data
-#   } else {
-#     n
-#   }
-# }
-
-
 
 write.csv(games_dirty, file = 'games_cleaned.csv', row.names = FALSE)
 

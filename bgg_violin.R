@@ -14,15 +14,18 @@ games = games%>%
 
 # i think giving an option to click on the top 50 different mechanics makes sense.
 # this could be higher for categories but we'll stop there.
-# games_owned_bins = games %>%
-#   group_by(owned_bins) %>%
-#   summarise_if(is.numeric, list(sum), na.rm = TRUE)
+games_owned_bins = games %>%
+  group_by(owned_bins) %>%
+  summarise_if(is.numeric, list(sum), na.rm = TRUE)
 # # 
-# start_col="cat_Abstract.Strategy"
-# last_col="cat_Zombies"
-# firstcol = which(colnames(games_owned_bins)==start_col) # just cause it is.
-# lastcol = which(colnames(games_owned_bins)==last_col) # just cause it is.
-# top_20 = colnames(games_owned_bins[c(firstcol:lastcol)])[rev(sort.list(colSums(games_owned_bins[c(firstcol:lastcol)])))[1:70] ]
+start_col="mech_Acting"
+last_col="mech_Zone.of.Control"
+
+start_col="cat_Abstract.Strategy"
+last_col="cat_Zombies"
+firstcol = which(colnames(games_owned_bins)==start_col) # just cause it is.
+lastcol = which(colnames(games_owned_bins)==last_col) # just cause it is.
+top_20 = colnames(games_owned_bins[c(firstcol:lastcol)])[rev(sort.list(colSums(games_owned_bins[c(firstcol:lastcol)])))[1:50] ]
 # top_20_grouped = games_owned_bins %>%
 #   select(owned_bins,all_of(top_20))
 
@@ -31,11 +34,10 @@ games = games%>%
 
 
 
-
-
-games_owned_bins = games %>% 
-  group_by(owned_bins) %>%
-  summarise_if(is.numeric, list(mean), na.rm = TRUE)
+# 
+# games_owned_bins = games %>% 
+#   group_by(owned_bins) %>%
+#   summarise_if(is.numeric, list(mean), na.rm = TRUE)
 
 
 
@@ -104,6 +106,9 @@ play_time_violin
 
 min_age_violin = graph_violinplot('min_age','Minimum Age graph',1.4)
 min_age_violin
+
+year_violin = graph_violinplot('year_published','year published graph',1.4)
+year_violin
 
 
 
@@ -180,6 +185,6 @@ adult_complex
 adult_time = graph_group_violinplot('cat_Mature...Adult', 'play_time')
 adult_time
 
-adult_age = graph_group_violinplot('cat_Mature...Adult', 'min_age')
+adult_age = graph_group_violinplot('mech_Variable.Player.Powers', 'avg_rating')
 adult_age
 # cat_Mature...Adult
