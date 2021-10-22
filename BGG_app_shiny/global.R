@@ -1,15 +1,7 @@
 library(shiny)
 library(shinydashboard)
-# library(DT)
 library(tidyverse)
-# library(lubridate)
-# library(ggthemes)
-# library(googleVis)
-# library(wesanderson)
-# library(bubbles)
-# library(RColorBrewer)
-# library(rex)
-source('./helpers.r')
+source('helpers.R')
 
 games = read.csv('data/games_cleaned.csv')
 

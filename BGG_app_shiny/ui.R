@@ -1,3 +1,7 @@
+# shiny app style is all based on Victoria Lowery Bon Appetit shiny app
+# https://github.com/vlowery/BonApp  
+# https://vlowery.shinyapps.io/bon_appetit_history/
+
 shinyUI(dashboardPage(
   dashboardHeader(title = "Board Game Geek"),
   dashboardSidebar(sidebarMenu(
@@ -6,7 +10,6 @@ shinyUI(dashboardPage(
     menuItem("Board Games Sorted", tabName = "stacked_bar", icon = icon("sort-amount-down")),
     menuItem("Game Mechanic Trends", tabName = "mechanic", icon = icon("dice")),
     menuItem("Game Category Trends", tabName = "category", icon = icon("hat-wizard"))
-    # menuItem("COVID-19 Response", tabName = "corona", icon = icon("briefcase-medical"))
   )), 
   # icon list : chess , chess-board , cogs , database , dice , 
   # dice-d20 , dollar-sign , dungeon , file-csv , github , info , link , 
