@@ -1,11 +1,11 @@
 shinyUI(dashboardPage(
   dashboardHeader(title = "Board Game Geek"),
   dashboardSidebar(sidebarMenu(
-    menuItem("Introductions", tabName = "intro", icon = icon("info")),
-    menuItem("Broad Picture", tabName = "violin", icon = icon("calendar")),
-    menuItem("Reviews/Ratings", tabName = "stacked_bar", icon = icon("thumbs-up")),
-    menuItem("Ingredient Trends", tabName = "mechanic", icon = icon("lemon")),
-    menuItem("Ingredient Trends", tabName = "category", icon = icon("lemon"))
+    menuItem("Introductions", tabName = "intro", icon = icon("chess")),
+    menuItem("Game Attributes", tabName = "violin", icon = icon("dollar-sign")),
+    menuItem("Board Games Sorted", tabName = "stacked_bar", icon = icon("sort-amount-down")),
+    menuItem("Game Mechanic Trends", tabName = "mechanic", icon = icon("dice")),
+    menuItem("Game Category Trends", tabName = "category", icon = icon("hat-wizard"))
     # menuItem("COVID-19 Response", tabName = "corona", icon = icon("briefcase-medical"))
   )), 
   # icon list : chess , chess-board , cogs , database , dice , 
@@ -19,44 +19,32 @@ shinyUI(dashboardPage(
               br(),
                 fluidRow(
                   column(offset = 2, width = 8, 
-                         box(width = 12, h2(tags$b("Introduciton")), background = "black",
-                             p("I am an avid Board Game player. I love that I can be very analytical in coming up with a strategy to win a game, 
-                    while also communicating and having a great time with friends. After my first experience with an indie Board Game 
-                    I quickly became addicted to looking at BoardGameGeek.com, the IMDB for board games, and searching for the next great game to buy."),
-                             p("I did this project looking at the information provided on BoardGameGeek.com. I focused on what attributes did more popular games have and were they reproducible. 
-                               Popular games will be described as games that have a large number of BoardGameGeek users reporting to own the game. This is not a perfect metric and is shown to be faulty by having games like chess not being at the top of the list.
-                               But I think that is an acceptable problem because if you are a Board Game maker you can't make the new Chess. But you can make indie games like Catan that the users of BoardGameGeeks will love and buy.")
+                         box(width = 12, h2(tags$b("Introduction")), background = "black",
+                             p("I am an avid Board Game player. 
+                             I love that I can be very analytical in coming up with a strategy to win a game, 
+                             while also communicating and having a great time with friends. 
+                             After my first experience with an indie Board Game I quickly became addicted to looking at BoardGameGeek.com, 
+                             the IMDB for board games, and searching for the next great game to buy."),
+                             p("I built this app looking at information provided on BoardGameGeek.com. 
+                               I focused on what attributes popular games have and if they are reproducible. 
+                               Popular games will be described as games that have a large number of BoardGameGeek users reporting to own the game. 
+                               This is not a perfect metric as games like chess are not at the top of the list. 
+                               I think that is an acceptable problem because if you are a Board Game maker you can't make the new Chess. 
+                               But you can make an indie game like Catan that the users of BoardGameGeeks will love, buy, and report that they own it.")
                              ))
                 ),
               fluidRow(
                 box(width = 6, h2(tags$b("Expectations")), background = "olive", 
-                    p("Initially, my expectations were that less complex and shorter games would be more successful. 
-                      Their shorter play time and ease of accessbility would make them more likely to be so sold to the masses. Party Games would be a prime example of a style of game that can appeal to the masses.
-                      I also thought that German style board games, or Econmic games, like Catan would be popular because Catan functions as a gateway board game for so many people.")), 
+                    p("Initially, I thought that less complex and shorter games would be more successful. 
+                      Their shorter play time and ease of accessibility would make them more likely to be so sold to the masses. 
+                      Party Games would be a prime example of a style of game that can appeal to the masses. 
+                      I also thought that German style board games, or Economic games, like Catan would be popular because Catan functions as a gateway board game for so many people.")), 
                 box(width = 6, h2(tags$b("Reality")), background = "maroon", 
                     p("Surprisingly, however, only half of my expectations were true. According to the data scraped,", 
                       tags$b("more complex and longer games are more popular."), "I was correct that German style board games are very common and very popular.
                       But Economic games are not the only style of game that are very popular. 
                       I was half correct that there are a lot of Party Games designed but the market might be over saturated as not very many Party Games are successful."))
-              )#, 
-            #   fluidRow(
-            #     column(offset = 2, width = 8, align = "center", 
-            #            box(width = 12, h2(tags$b("Conclusion")), background = "navy", 
-            #                p("In late 2016, the last year before recipe output declines, Bon Appetit launched a YouTube channel  
-            #             featuring a test kitchen chef making fermented foods and featuring microbial food cultures. While the series'  
-            #             style was fairly unproduced and there were plenty of 'real-life' moments and mistakes, it was a hit. Previously 
-            #             social media had been inundated with POV cooking videos featuring only hands and pans, so to see 
-            #             the actual chef and", tags$b("to connect with the person cooking the dish made Bon Appetit's channel stand out. "), 
-            #                  br(), br(), "Following the 'It's Alive with Brad' series, Bon Appetit released more and more specialty 
-            #             channels, some focusing on more posh dishes while other channels played with the notion itself of cooking, 
-            #             like 'Reverse Engineering' where chef Chris Morocco reverse engineers a recipe for a dish he can 
-            #             only eat while blindfolded."), br(), img(src = "youtube_shot.png", height = 200), br(), br(), 
-            #                p("Bon Appetit has in fact increased their digital presence, just not in the way I had expected. 
-            #               By spending more time and resources per recipe published through their YouTube channel, 
-            #               Bon Appetit has pivoted their brand to one that has recipes consistently trending on YouTube 
-            #               and nearly 50 videos with more than 5 million views each. Thus the magazine is listing fewer recipes 
-            #                      but devotes more time and media platforms to each recipe.")))
-            #   )
+              )
             )
     ),
     ###################################### stacked bar tab
@@ -64,10 +52,10 @@ shinyUI(dashboardPage(
             fluidPage(
               fluidRow(
                 column(offset = 2, width = 8,
-                       box(width = 12, h1(tags$b("Board Games Sorted"), br()), align = "center", background = "olive",
+                       box(width = 12, h1(tags$b("Board Games Sorted"), br()), align = "center", background = "maroon",
                            h4(tags$b("Board Game Mechanic's are the tools that you use and how you use them to play the game"),br(),
                               ("(e.g. rolling dice in Monopoly or the pattern recognition of Connect 4)"), br(), br(),
-                              tags$b("Board Game Category's are the themes or the storys of the game."), br(),
+                              tags$b("Board Game Categories are the themes or the stories of the game."), br(),
                               ("(e.g. Economic concerns in Monopoly or Connect 4 being for Children)")
                               ))
               )),
@@ -82,38 +70,21 @@ shinyUI(dashboardPage(
                                  So it is best to compare each mechanic to its peers."),
                     p("The mechanics that tend to have more popular games are Area Majority Influence, Card Drafting, and Variable Player Powers. 
                       The mechanics that tend to have less popular games are Simulation, Roll Spin and Move, and Hexagon Grid."),
-                    p("The mechanic counts graph shows that Dice Rolling and Hang Mangagement games are the most common games. 
+                    p("The mechanic counts graph shows that Dice Rolling and Hand Mangagement games are the most common games. 
                       They are basic mechanics that any game could build on as a foundation for a game."))
               ),
-              h2("Top 20 Game Categorys"),
+              h2("Top 20 Game Categories"),
               fluidRow(
-                box(width = 4, p("There are generally less Categorys that a game can fit into so games that are more popular are not substantially more likely to have more categorys added."),
+                box(width = 4, p("There are generally less categories that a game can fit into, so games that are more popular are not substantially more likely to have more categories added."),
                     p("Games that can have a story or narrative around the game tend to be more popular. This is shown by Economic, Medieval, Adventure, Fighting, and Fantasy being at the top of the list.
-                      The less popular games of Children's Games and Action Dextrity are games that might have less replay value so people are less likely to buy them. 
+                      The less popular games of Children's Games and Action Dexterity are games that might have less replay value so people are less likely to buy them. 
                       Wargames have a unique distribution where they don't have many very popular or very unpopular games and instead have a majority of their games in the middle of our games owned range."),
-                    p("he category counts graphs shows that Card Games are a very popular game. There are a suprisingly large amount of Fantasy games with that being the third most popular category.
+                    p("The category counts graphs shows that Card Games are a very popular game. There are a surprisingly large number of Fantasy games with that being the third most popular category.
                                         ")),
                 tabBox(width = 8,
                        tabPanel("Mechanic Proportions", plotOutput("cat_bar_per")),
-                       tabPanel("Mechanic Counts", plotOutput("cat_bar_total")))#,
+                       tabPanel("Mechanic Counts", plotOutput("cat_bar_total")))
               )
-              # fluidRow(
-              #   box(width = 3, p("To compare individual years, the box on the far right allows the selection of specific years.", br(), br(),
-              #                    "The comparison of peak output in 2016 against the year 2018 or 2019 displays the stark dropoff of
-              #                         output, most noticably at the start of the year in January and during the summer in July."),
-              #       title = "Interactive Monthly Graph"),
-
-              # p("There are generally less Categorys that a game can fit into so games that are more popular are not substantially more likely to have more categorys added."),
-              # p("Games that can have a story or narrative around the game tend to be more popular. This is shown by Economic, Medieval, Adventure, Fighting, and Fantasy being at the top of the list.
-              #         The less popular games of Children's Games and Action Dextrity are games that might have less replay value so people are less likely to buy them.
-              #         Wargames have a unique distribution where they don't have many very popular or very unpopular games and instead have a majority of their games in the middle of our games owned range."),
-              # p("The category counts graphs shows that Card Games are a very popular game. There are a suprisingly large amount of Fantasy games with that being the third most popular category.")),
-              #   box(width = 7, plotOutput("interactive_year_totals")),
-              #   box(width = 2, align = "center", checkboxGroupInput("checkGroup1", label = h3("Years"),
-              #                                                       choices = list("2014" = 2014, "2015" = 2015, "2016" = 2016,
-              #                                                                      "2017" = 2017, "2018" = 2018, "2019" = 2019,
-              #                                                                      "2020" = 2020), selected = c(2016, 2019)))
-              # )
             )
     ),
 #### game mechanics
@@ -123,7 +94,7 @@ shinyUI(dashboardPage(
                 column(offset = 1, width = 10,
                        box(width = 12, h1(tags$b("Successful Board Game Attributes"), br()),
                            h4("Investigating trends for popular Board Games."),
-                           align = "center", background = "maroon"
+                           align = "center", background = "olive"
                            )
                        )
               ),
@@ -136,23 +107,21 @@ shinyUI(dashboardPage(
                        tabPanel("Play Time", plotOutput("violin_time"))
                 ),
                 box(width = 4,
-                    p("The average ratings graph shows that as more people own the games that they are more likely to have a better rating.
-                      The range of the of average ratings also become more spread out as less people own the game. 
+                    p("TThe average ratings graph shows that as more people own the games that they are more likely to have a better rating. 
+                      The range of the average ratings also become more spread out as less people own the game. 
                       There can be more noise in average ratings when less people own and then rate games."),
-                    p("The game complexity is suprising that more popular games tend to be more complex. 
-                      The least popular games, where two to 126 people reported owning that game, 
-                      have the majority of their games with a complexity rating below 2 out of 5."),
-                    p("Games owned by game publishing year all have a similiar inner quartile range of about 2006 to 2016. 
+                    p("The game complexity is surprising that more popular games tend to be more complex. 
+                      The least popular games, where two to 126 people reported owning that game, have the majority of their games with a complexity rating below 2 out of 5."),
+                    p("Games owned by publishing year all have a similar interquartile range of about 2006 to 2016. 
                       But the graph does show that game production has been steadily increasing. 
                       The downturn in 2020 is explained by this data being accessed in mid 2020."),
-                    p("The age recommendation graph shows that the most popular games are not recommended for children under the age of 10.
-                    But notice that the least popular games have a much longer tail of recommended games. Those are typically 'Mature' or adult themed games."),
+                    p("The age recommendation graph shows that the most popular games are not recommended for children under the age of 10. 
+                      But notice that the least popular games have a much longer tail of recommended games. 
+                      Those are typically 'Mature' or adult themed games."),
                     p("Median Play Time tends to increase for more popular games. 
-                      This could be related to those more popular games also being more 
-                      complex and therefore need more time to resolve. 
-                      Play time also has a notably long tail to its distribution 
-                      where most games end in under an hour and half, while some 
-                      games go longer than six hours."))
+                      This could be related to those more popular games also being more complex and therefore need more time to resolve. P
+                      lay time also has a notably long tail to its distribution where most games end in under an hour and half, 
+                      while some games go longer than six hours."))
               )
             )
     ),
@@ -236,7 +205,7 @@ shinyUI(dashboardPage(
             fluidPage(
               fluidRow(
                 column(offset = 2, width = 8,
-                       box(width = 12, h1(tags$b("The Trends in Game Categorys")),
+                       box(width = 12, h1(tags$b("The Trends in Game Categories")),
                            align = "center", background = "maroon"))
               ),
               fluidRow(h2("Specific Game Category Trends")),
