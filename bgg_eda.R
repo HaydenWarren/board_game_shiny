@@ -1,8 +1,4 @@
-
 library(tidyverse)
-# library(data.table)
-# look at the top publishers to look at different publishers.
-
 
 games = read.csv('games_cleaned.csv')
 
