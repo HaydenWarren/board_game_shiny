@@ -110,7 +110,7 @@ shinyUI(dashboardPage(
                        tabPanel("Play Time", plotOutput("violin_time"))
                 ),
                 box(width = 4,
-                    p("TThe average ratings graph shows that as more people own the games that they are more likely to have a better rating. 
+                    p("The average ratings graph shows that as more people own the games that they are more likely to have a better rating. 
                       The range of the average ratings also become more spread out as less people own the game. 
                       There can be more noise in average ratings when less people own and then rate games."),
                     p("The game complexity is surprising that more popular games tend to be more complex. 

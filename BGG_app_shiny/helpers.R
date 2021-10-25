@@ -50,11 +50,11 @@ graph_stacked_bar <- function(start_col,last_col,title_){
                                 '472 - 235',
                                 '1,262 - 472',
                                 '144,727 - 1,263')) +
-    scale_fill_manual(values = c('126 - 2'="#E76F51", #e60012 #ad0c2f #73184d #3a246a #003087
-                                 '234 - 127'="#F4A261",
-                                 '472 - 235'="#E9C46A",
-                                 '1,262 - 472'="#2A9D8F",
-                                 '144,727 - 1,263'="#264653"),
+    scale_fill_manual(values = c('126 - 2'="#A7226E", 
+                                 '234 - 127'="#EC2049",
+                                 '472 - 235'="#F26B38",
+                                 '1,262 - 472'="#F7DB4F",
+                                 '144,727 - 1,263'="#2F9599"),
                       guide = guide_legend(reverse = TRUE))+ 
     theme(axis.title.y=element_blank(),
           axis.ticks.y=element_blank(),
@@ -124,11 +124,11 @@ graph_total_bar <- function(start_col,last_col,title_){
                                 '472 - 235',
                                 '1,262 - 472',
                                 '144,727 - 1,263')) +
-    scale_fill_manual(values = c('126 - 2'="#83AF9B", 
-                                 '234 - 127'="#C8C8A9",
-                                 '472 - 235'="#F9CDAD",
-                                 '1,262 - 472'="#FC9D9A",
-                                 '144,727 - 1,263'="#FE4365"),
+    scale_fill_manual(values = c('126 - 2'="#A7226E", 
+                                 '234 - 127'="#EC2049",
+                                 '472 - 235'="#F26B38",
+                                 '1,262 - 472'="#F7DB4F",
+                                 '144,727 - 1,263'="#2F9599"),
                       guide = guide_legend(reverse = TRUE))+ 
     theme(axis.title.y=element_blank(),
           axis.ticks.y=element_blank(),
@@ -177,11 +177,11 @@ graph_violinplot <- function(y_axis,title_,adjust_val){
                                 '472 - 235',
                                 '1,262 - 472',
                                 '144,727 - 1,263')) +
-    scale_fill_manual(values = c('126 - 2'="#83AF9B",
-                                 '234 - 127'="#C8C8A9",
-                                 '472 - 235'="#F9CDAD",
-                                 '1,262 - 472'="#FC9D9A",
-                                 '144,727 - 1,263'="#FE4365"),
+    scale_fill_manual(values = c('126 - 2'="#A7226E",#A7226E   EC2049   F26B38   F7DB4F   2F9599
+                                 '234 - 127'="#EC2049",
+                                 '472 - 235'="#F26B38",
+                                 '1,262 - 472'="#F7DB4F",
+                                 '144,727 - 1,263'="#2F9599"),
                       guide = guide_legend(reverse = TRUE))+
     theme(axis.title.y=element_blank(),
           axis.ticks.y=element_blank(),
@@ -213,8 +213,8 @@ graph_group_violinplot <- function(x_axis,y_axis){
     scale_x_discrete(labels=c('1'=paste(type_,'Games'), 
                               '0'=paste0("Non-",type_," Games"))) +
     scale_shape_manual(values=c('1', '0')) +
-    scale_fill_manual(values = c('1'="#FC9D9A",
-                                 '0'="#F9CDAD"
+    scale_fill_manual(values = c('1'="#F7DB4F",
+                                 '0'="#F26B38"
     ))+
     theme(axis.title.y=element_blank(),
           axis.ticks.y=element_blank(),
@@ -278,11 +278,11 @@ graph_stacked_bar_group <- function(group,group_parent){
     scale_shape_manual(values=c('126 - 2', '234 - 127', 
                                 '472 - 235','1,262 - 472',
                                 '144,727 - 1,263')) +
-    scale_fill_manual(values = c('126 - 2'="#83AF9B", 
-                                 '234 - 127'="#C8C8A9",
-                                 '472 - 235'="#F9CDAD",
-                                 '1,262 - 472'="#FC9D9A",
-                                 '144,727 - 1,263'="#FE4365"),
+    scale_fill_manual(values = c('126 - 2'="#A7226E", 
+                                 '234 - 127'="#EC2049",
+                                 '472 - 235'="#F26B38",
+                                 '1,262 - 472'="#F7DB4F",
+                                 '144,727 - 1,263'="#2F9599"),
                       guide = guide_legend(reverse = TRUE))+ 
     theme(axis.title.y=element_blank(),
           axis.ticks.y=element_blank(),
@@ -345,11 +345,11 @@ graph_total_bar_group <- function(group){
                                 '472 - 235',
                                 '1,262 - 472',
                                 '144,727 - 1,263')) +
-    scale_fill_manual(values = c('126 - 2'="#83AF9B", 
-                                 '234 - 127'="#C8C8A9",
-                                 '472 - 235'="#F9CDAD",
-                                 '1,262 - 472'="#FC9D9A",
-                                 '144,727 - 1,263'="#FE4365"),
+    scale_fill_manual(values = c('126 - 2'="#A7226E", 
+                                 '234 - 127'="#EC2049",
+                                 '472 - 235'="#F26B38",
+                                 '1,262 - 472'="#F7DB4F",
+                                 '144,727 - 1,263'="#2F9599"),
                       guide = guide_legend(reverse = TRUE))+ 
     theme(axis.title.y=element_blank(),
           axis.ticks.y=element_blank(),
